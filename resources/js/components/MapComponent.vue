@@ -23,7 +23,8 @@
                                 :open="infoWindowOpen"
                                 @onCloseInfoWindow="closeInfoWindow"
                                 @onCreatePlace="onCreatePlace"
-                                @onDeletePlace="onDeletePlace"/>
+                                @onDeletePlace="onDeletePlace"
+                                @onUpdatePlace="onUpdatePlace"/>
         </gmap-map>
 
     </div>
@@ -80,6 +81,9 @@
                 this.infoWindowOpen = false;
                 this.selectedMarker = null;
                 this.markers = this.markers.filter( m => m.id != place.id); 
+            },
+            onUpdatePlace() {
+                this.infoWindowOpen = false;
             }
         },
     }

@@ -18,12 +18,26 @@ class PlaceService  extends Service{
      */
     public function get(Array $input)
     {
+
         if(!$this->validator->isValidForSearch($input))
             throw self::ValidationException($this->validator->errors());
 
         $input = $this->validator->setDefaultsSearch($input);
 
         $query = (new Place)->newQuery();
+        //dd($input);
+        if($input['order_by'] == 'alphabet') {
+            $query->orderBy('name', $input['order_sort']);
+        } else {
+            $query->selectRaw("*, (6371.4 * acos( cos( radians('".$input['near_by_lat']."') ) *
+                                cos( radians( lat ) ) *
+                                cos( radians( lng ) -
+                                radians('".$input['near_by_lng']."') ) +
+                                sin( radians('".$input['near_by_lat']."') ) *
+                                sin( radians( lat ) ) ) )
+                                AS distance");
+            $query->orderBy('distance', $input['order_sort']);
+        }
 
         return $query->get();
     }

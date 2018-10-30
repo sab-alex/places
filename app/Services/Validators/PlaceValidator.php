@@ -5,8 +5,8 @@ class PlaceValidator extends Validator{
     public $searchDefaults=[
         'skip'=>0,
         'limit'=>10,
-        'order_by'=>'near_by',
-        'order_sort'=>'desc',
+        'order_by'=>'alphabet',
+        'order_sort'=>'asc',
     ];
 
     public $searchRules=[
@@ -15,6 +15,15 @@ class PlaceValidator extends Validator{
         'skip' => 'integer',
         'limit' => 'integer|max:100',
     ];
+    public $searchRulesNearBy=[
+        'order_by' => 'in:near_by',
+        'order_sort' => 'in:desc,asc',
+        'skip' => 'integer',
+        'limit' => 'integer|max:100',
+        'near_by_lat' => 'required|numeric',
+        'near_by_lng' => 'required|numeric',
+    ];
+
     public $createRules=[
         'name'  => 'required|string|max:255',
         'lat'   => 'required|numeric',
@@ -27,7 +36,12 @@ class PlaceValidator extends Validator{
     ];
    
     public function isValidForSearch($input){
-        return $this->validate($input, $this->searchRules);
+        if(isset($input['order_by']) && $input['order_by'] == "near_by") {
+            return $this->validate($input, $this->searchRulesNearBy);
+        } else {
+            return $this->validate($input, $this->searchRules);
+        }
+
     }
     public function isValidForCreate($input){
         return $this->validate($input, $this->createRules);
@@ -37,8 +51,13 @@ class PlaceValidator extends Validator{
     }
 
 
-    public function setDefaultsSearch($input){
-        return $this->setParams($input, $this->searchRules, $this->searchDefaults);
+    public function setDefaultsSearch($input) {
+        if(isset($input['order_by']) && $input['order_by'] == "near_by") {
+            return $this->setParams($input, $this->searchRulesNearBy, $this->searchDefaults);
+        } else {
+            return $this->setParams($input, $this->searchRules, $this->searchDefaults);
+        }
+
     }
 
 }

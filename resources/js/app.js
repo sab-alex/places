@@ -28,6 +28,9 @@ Vue.component('app-marker', require('./components/MarkerComponent.vue'));
 Vue.component('app-info-window', require('./components/InfoWindowComponent.vue'));
 Vue.component('map-component', require('./components/MapComponent.vue'));
 
+Vue.component('app-near-by-select', require('./components/NearBySelectComponent.vue'));
+
+
 const app = new Vue({
     el: '#app'
 });

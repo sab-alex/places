@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\getPlaceRequest;
+use App\Http\Requests\PlaceRequest;
 use App\Repositories\PlaceRepository;
 
 class PageController extends Controller
@@ -22,7 +23,7 @@ class PageController extends Controller
         return view('pages/index');
     }
 
-    public function placesList(getPlaceRequest $request)
+    public function placesList(PlaceRequest $request)
     {
         $validated = $request->validated();
         $places = $this->placeRepository->get($validated);

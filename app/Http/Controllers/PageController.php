@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\PlaceService;
-use Illuminate\Http\Request;
+use App\Http\Requests\getPlaceRequest;
+use App\Repositories\PlaceRepository;
 
 class PageController extends Controller
 {
-    public function __construct() {
-        $this->service = new PlaceService();
+    /**
+     * @var PlaceRepository
+     */
+    private $placeRepository;
+
+    public function __construct(PlaceRepository $placeRepository)
+    {
+        $this->placeRepository = $placeRepository;
     }
 
     public function index()
@@ -16,9 +22,10 @@ class PageController extends Controller
         return view('pages/index');
     }
 
-    public function placesList(Request $request)
+    public function placesList(getPlaceRequest $request)
     {
-        $places = $this->service->get($request->all());
-        return view('pages/list', ['places'=>$places]);
+        $validated = $request->validated();
+        $places = $this->placeRepository->get($validated);
+        return view('pages/list', ['places' => $places]);
     }
 }

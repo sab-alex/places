@@ -2,77 +2,57 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\PlaceService;
-use Illuminate\Http\Request;
+use App\Http\Requests\PlaceRequest;
+use App\Http\Requests\StorePlaceRequest;
+use App\Http\Requests\UpdatePlaceRequest;
+use App\Repositories\PlaceRepository;
 
 class PlaceResourceController extends Controller
 {
-    public  function __construct() {
-        $this->service = new PlaceService();
-    }
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @var PlaceRepository
      */
-    public function index(Request $request)
-    {
-        return $this->service->get($request->all());
-    }
+    private $placeRepository;
 
     /**
-     * Show the form for creating a new resource.
+     * PlaceResourceController constructor.
      *
-     * @return \Illuminate\Http\Response
+     * @param PlaceRepository $placeRepository
      */
-    public function create(Request $request)
+    public function __construct(PlaceRepository $placeRepository)
     {
-
+        $this->placeRepository = $placeRepository;
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param PlaceRequest $request
+     * @return \Illuminate\Contracts\Routing\ResponseFactory|\Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function index(PlaceRequest $request)
     {
-        return $this->service->store($request->all());
+        $data = $this->placeRepository->get($request->validated());
+        return response($data);
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
+     * @param StorePlaceRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function store(StorePlaceRequest $request)
     {
-        //
+        $data = $this->placeRepository->store($request->validated());
+        return response($data);
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
+     * @param UpdatePlaceRequest $request
+     * @param $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function update(UpdatePlaceRequest $request, $id)
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        return $this->service->update($request->all(), $id);
+        $data =  $this->placeRepository->update($request->validated(), $id);
+        return response($data);
     }
 
     /**
@@ -83,6 +63,7 @@ class PlaceResourceController extends Controller
      */
     public function destroy($id)
     {
-        return $this->service->destroy($id);
+        $data = $this->placeRepository->destroy($id);
+        return response($data);
     }
 }

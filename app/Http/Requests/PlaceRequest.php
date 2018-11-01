@@ -3,14 +3,16 @@
 namespace App\Http\Requests;
 
 use Illuminate\Http\Request;
+use App\Repositories\PlaceRepository;
 
 class PlaceRequest extends BaseRequest
 {
+
     public $defaultParams = [
-        'skip'=>0,
-        'limit'=>10,
-        'order_by'=>'alphabet',
-        'order_sort'=>'asc',
+        'skip' => 0,
+        'limit' => 10,
+        'order_by' => PlaceRepository::ORDER_ALPHABET,
+        'order_sort' => PlaceRepository::ORDER_SORT,
     ];
 
     /**
@@ -22,10 +24,10 @@ class PlaceRequest extends BaseRequest
      */
     public function rules(Request $request)
     {
-        $nearByOrder = config('constants.places.order_near_by');
-        if ($request->input('order_by') == $nearByOrder) {
+
+        if ($request->input('order_by') == PlaceRepository::ORDER_NEAR_BY) {
             return [
-                'order_by' => 'in:near_by',
+                'order_by' => 'in:'.PlaceRepository::ORDER_NEAR_BY,
                 'order_sort' => 'in:desc,asc',
                 'skip' => 'integer',
                 'limit' => 'integer|max:100',
@@ -34,7 +36,7 @@ class PlaceRequest extends BaseRequest
             ];
         } else {
             return [
-                'order_by' => 'in:alphabet',
+                'order_by' => 'in:'.PlaceRepository::ORDER_ALPHABET,
                 'order_sort' => 'in:desc,asc',
                 'skip' => 'integer',
                 'limit' => 'integer|max:100',

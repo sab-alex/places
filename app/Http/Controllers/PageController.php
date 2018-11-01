@@ -25,8 +25,12 @@ class PageController extends Controller
 
     public function placesList(PlaceRequest $request)
     {
-        $validated = $request->validated();
-        $places = $this->placeRepository->get($validated);
+        $places = [];
+        try {
+            $places = $this->placeRepository->get($request->validated());
+        } catch (\Exception $e) {
+            abort($e->getCode(), $e->getMessage());
+        }
         return view('pages/list', ['places' => $places]);
     }
 }

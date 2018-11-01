@@ -13,11 +13,11 @@
         <tr>
             <th scope="col">#</th>
             <th scope="col">Area</th>
-            @if(!app('request')->input('order_by') || app('request')->input('order_by') == 'alphabet')
+            @if(!app('request')->input('order_by') || app('request')->input('order_by') == PlaceRepository::ORDER_ALPHABET)
                 <th scope="col">Latitude</th>
                 <th scope="col">Longitude</th>
             @endif
-            @if(app('request')->input('order_by') == 'near_by')
+            @if(app('request')->input('order_by') == PlaceRepository::ORDER_NEAR_BY)
                 <th scope="col">Distance, kms</th>
             @endif
         </tr>
@@ -27,11 +27,11 @@
                 <tr>
                     <th scope="row">{{$place->id}}</th>
                     <td>{{$place->name}}</td>
-                    @if(!app('request')->input('order_by') || app('request')->input('order_by') == 'alphabet')
+                    @if(!app('request')->input('order_by') || app('request')->input('order_by') == PlaceRepository::ORDER_ALPHABET)
                         <td>{{$place->lat}}</td>
                         <td>{{$place->lng}}</td>
                     @endif
-                    @if(app('request')->input('order_by') == 'near_by')
+                    @if(app('request')->input('order_by') == PlaceRepository::ORDER_NEAR_BY)
                         <td>{{ceil($place->distance)}}</td>
                     @endif
                 </tr>
